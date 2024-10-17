@@ -14,7 +14,7 @@ namespace ExoFinalBilleterie.Classes
         public string Addresse { get; set; }
         public int Age { get; set; }
         public int Tel { get; set; }
-        public List<Billet> Billets { get; set; }
+        public List<Billet> Billets { get; set; } = new List<Billet>();
 
         public Client(string nom, string prenom, string addresse, int age, int tel)
         {

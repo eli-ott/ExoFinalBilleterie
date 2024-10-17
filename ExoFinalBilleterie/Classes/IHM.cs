@@ -8,6 +8,7 @@ namespace ExoFinalBilleterie.Classes
 {
     internal class IHM
     {
+        public int Etape { get; set; } = 0;
         public List<Client> Clients { get; set; } = new();
         public List<Evenement> Evenements { get; set; } = new();
         public List<Lieu> Lieux { get; set; } = new();
@@ -29,26 +30,38 @@ namespace ExoFinalBilleterie.Classes
         {
             do
             {
-                Client client = CreerClient();
+                switch (Etape)
+                {
+                    case 0:
+                        Intro();
+                        break;
+                    case 1:
+                        Client client = CreerClient();
+                        Clients.Add(client);
 
-                Console.WriteLine("Liste des concerts disponibles : \n");
-                Console.WriteLine(GetListeEvenement());
-
-                int eventIndex;
-                Console.WriteLine("Choisissez un évenement :");
-                int.TryParse(Console.ReadLine(), out eventIndex);
-
-                Evenement evenement = Evenements[eventIndex - 1];
-
-                Console.WriteLine(evenement.ToString());
-
-                Console.WriteLine("Voulez vous reserver un billet ?");
-                Console.
-
-                break;
+                        ReserverEvenement(client);
+                        break;
+                    case 2:
+                        //TODO quand le client à déjà reserver
+                        break;
+                }
             } while (true);
         }
 
+        public void Intro()
+        {
+            Console.WriteLine("Deja client ? Oui - Non");
+            string choix = Console.ReadLine();
+
+            switch (choix.ToLower())
+            {
+                case 'oui':
+                    break;
+                case "non":
+                    Etape = 1;
+                    break;
+            }
+        }
         public Client CreerClient()
         {
             Console.WriteLine("Bonjour, entrez votre prénom :");
@@ -87,6 +100,30 @@ namespace ExoFinalBilleterie.Classes
             } while (true);
 
             return new Client(nom, prenom, adresse, age, tel);
+        }
+
+        public void ReserverEvenement(Client client)
+        {
+            Console.WriteLine("Liste des concerts disponibles : \n");
+            Console.WriteLine(GetListeEvenement());
+
+            int eventIndex;
+            Console.WriteLine("Choisissez un évenement :");
+            int.TryParse(Console.ReadLine(), out eventIndex);
+
+            Evenement evenement = Evenements[eventIndex - 1];
+
+            Console.WriteLine(evenement.ToString());
+
+            Console.WriteLine("Quel type de billet voulez vous ? (Standard, gold, VIP)");
+            string choix = Console.ReadLine() ?? "Standard";
+
+            evenement.ReserverBillet(client, choix);
+
+            //TODO Faire qu'on puisse voir ses billets ou en reserver de nouveau
+            //Console.WriteLine($"1 - Réserver à nouveau un billet" +
+            //        $"2 - Voir mes billets");
+            //const choix = Console.ReadLine();
         }
 
         public string GetListeEvenement()

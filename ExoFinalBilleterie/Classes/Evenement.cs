@@ -10,22 +10,12 @@ namespace ExoFinalBilleterie.Classes
 {
     internal class Evenement
     {
-        private List<Billet> _billets;
-
         public string Nom { get; set; }
         public Lieu Lieu { get; set; }
         public DateOnly Date { get; set; }
         public TimeOnly Heure { get; set; }
         public int NbPlaces { get; set; }
-        public List<Billet> Billets
-        {
-            get => _billets;
-            set
-            {
-                NbPlaces++;
-                _billets = value;
-            }
-        }
+        public List<Billet> Billets { get; set; } = new List<Billet>();
 
         public Evenement(string nom, Lieu lieu, DateOnly date, TimeOnly heure)
         {
@@ -37,12 +27,13 @@ namespace ExoFinalBilleterie.Classes
 
         public void ReserverBillet(Client client, string typePlace)
         {
-            if (Lieu.Capacite < NbPlaces)
+            if (Lieu.Capacite > NbPlaces)
             {
                 Billet billet = new Billet(NbPlaces + 1, client, this, typePlace);
                 Billets.Add(billet);
 
                 client.AjouterBillet(billet);
+                NbPlaces++;
 
                 Console.WriteLine($"Votre billet à été reservé - Place n°{billet.Place}");
                 Console.WriteLine($"Il reste {Lieu.Capacite - NbPlaces} places pour cet évenement");
